@@ -4,48 +4,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    public GameState CurrentGameState { get; private set; } = GameState.MainMenu;
+    public GameState currentState;
 
-    public void SetState(GameState newState)
+    void Awake()
     {
-        CurrentGameState = newState;
-
-        switch (CurrentGameState)
-        {
-            case GameState.MainMenu:
-                Time.timeScale = 0;
-                break;
-
-            case GameState.Playing:
-                Time.timeScale = 1;
-                break;
-
-            case GameState.Paused:
-                Time.timeScale = 0;
-                break;
-
-            case GameState.GameOver:
-                Time.timeScale = 0;
-                break;
-        }
+        Instance = this;
     }
 
-    public void Awake()
+    void Start()
     {
-        if(Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    public void Start()
-    {
-        CurrentGameState = GameState.Playing;
+        currentState = GameState.Playing;
     }
 
     void Update()
@@ -59,26 +27,12 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         Time.timeScale = 0f;
-        CurrentGameState = GameState.Paused;
+        currentState = GameState.Paused;
     }
 
     public void GameOver()
     {
         Debug.Log("Game Over");
-        CurrentGameState = GameState.GameOver;
-    }
-
-    public void ResumeGame() // tambahan Tab
-    {
-        Time.timeScale = 1f;
-        CurrentGameState = GameState.Playing;
-    }
-
-    public enum GameState // tambahan Tab
-    {
-        MainMenu,
-        Playing,
-        Paused,
-        GameOver
+        currentState = GameState.GameOver;
     }
 }

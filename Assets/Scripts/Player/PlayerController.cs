@@ -3,8 +3,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float currentHP = 120f;
-    public float speed = 8f;
+    public float currentHP = 100;
+    public float speed = 5f;
     private PlayerInput playerInput;
     private Vector2 moveInput;
 
@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
 
     void TakeDamage(float dmg)
     {
-        currentHP += dmg;
+        currentHP -= dmg;
         Debug.Log("Player HP: " + currentHP);
 
         if (currentHP <= 0)
