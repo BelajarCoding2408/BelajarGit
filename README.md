@@ -1,4 +1,5 @@
 # Panduan Lengkap Penggunaan Git & Repositori
+# Perbaikan UTS Gamedev menggunakan Scripttable Object
 
 Selamat datang di repositori proyek! Dokumen ini berisi standar operasional dan panduan menggunakan Git agar kolaborasi tim berjalan lancar, rapi, dan meminimalisir *conflict*, terutama saat bekerja dengan file berukuran besar (*assets*).
 
