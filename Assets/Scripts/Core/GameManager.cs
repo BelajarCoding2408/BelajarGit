@@ -1,84 +1,100 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    public GameState CurrentGameState { get; private set; } = GameState.MainMenu;
+    public GameState currentState;
 
-    public void SetState(GameState newState)
+    [Header("UI")]
+    public GameObject pauseUI;
+    public GameObject gameOverUI;
+
+    void Awake()
     {
-        CurrentGameState = newState;
-
-        switch (CurrentGameState)
-        {
-            case GameState.MainMenu:
-                Time.timeScale = 0;
-                break;
-
-            case GameState.Playing:
-                Time.timeScale = 1;
-                break;
-
-            case GameState.Paused:
-                Time.timeScale = 0;
-                break;
-
-            case GameState.GameOver:
-                Time.timeScale = 0;
-                break;
-        }
+        Instance = this;
     }
 
-    public void Awake()
+    void Start()
     {
-        if(Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+        currentState = GameState.Playing;
+        Time.timeScale = 1f;
 
-    public void Start()
-    {
-        CurrentGameState = GameState.Playing;
+        if (pauseUI != null)
+            pauseUI.SetActive(false);
+
+        if (gameOverUI != null)
+            gameOverUI.SetActive(false);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            TogglePause();
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            GameOver();
+        }
+    }
+
+    
+    public void TogglePause()
+    {
+        if (currentState == GameState.Playing)
+        {
             PauseGame();
+        }
+        else if (currentState == GameState.Paused)
+        {
+            ResumeGame();
         }
     }
 
     public void PauseGame()
     {
+        currentState = GameState.Paused;
         Time.timeScale = 0f;
-        CurrentGameState = GameState.Paused;
+
+        if (pauseUI != null)
+            pauseUI.SetActive(true);
     }
 
+    public void ResumeGame()
+    {
+        currentState = GameState.Playing;
+        Time.timeScale = 1f;
+
+        if (pauseUI != null)
+            pauseUI.SetActive(false);
+    }
+
+    
     public void GameOver()
     {
-        Debug.Log("Game Over");
-        CurrentGameState = GameState.GameOver;
+        Debug.Log("GAME OVER");
+
+        currentState = GameState.GameOver;
+        Time.timeScale = 0f;
+
+        if (gameOverUI != null)
+        {
+            gameOverUI.SetActive(true);
+            gameOverUI.transform.SetAsLastSibling();
+        }
     }
 
-    public void ResumeGame() // tambahan Tab
+   
+    public void BackToMainMenu()
     {
+        Debug.Log("Back to Main Menu");
+
         Time.timeScale = 1f;
-        CurrentGameState = GameState.Playing;
-    }
+        currentState = GameState.Playing;
 
-    public enum GameState // tambahan Tab
-    {
-        MainMenu,
-        Playing,
-        Paused,
-        GameOver
+        SceneManager.LoadScene("MainMenu");
     }
 }
